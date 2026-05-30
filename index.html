@@ -70,6 +70,7 @@
       </div>
     </div>
     <div style="margin-top:14px; font-size:0.85rem; color:#8aabcc;">历史累计盈亏 <span id="total-alltime-pnl" style="font-weight:600;">—</span> <span style="font-size:0.75rem; color:#4a6a8a;" id="total-alltime-note"></span></div>
+    <div style="margin-top:8px; font-size:0.9rem; color:#8aabcc;">真实年化 <span id="total-xirr" style="font-weight:700;">—</span> · 累计回报 <span id="total-roi" style="font-weight:700;">—</span></div>
     <div class="fx-note" id="fx-note">汇率载入中…</div>
   </div>
 
@@ -85,6 +86,9 @@
       <div class="sub-row">累计盈亏 <span id="mplus-alltime">—</span></div>
       <div class="sub-row">已提取股息（现金账户）<span id="mplus-div-cash">—</span></div>
       <div class="sub-row">Margin 股息（留在账户）<span id="mplus-div-margin">—</span></div>
+      <div class="divider-line"></div>
+      <div class="sub-row">XIRR（含股息）<span id="mplus-xirr">—</span></div>
+      <div class="sub-row">累计 ROI <span id="mplus-roi">—</span></div>
     </div>
     <!-- MooMoo Card -->
     <div class="card">
@@ -95,6 +99,7 @@
       <div class="divider-line"></div>
       <div class="sub-row">当月盈亏 <span id="moomoo-monthly">—</span></div>
       <div class="sub-row">历史总盈亏 <span id="moomoo-alltime">—</span></div>
+      <div class="sub-row">XIRR <span id="moomoo-xirr">—</span></div>
     </div>
     <!-- Tiger Card -->
     <div class="card">
@@ -105,7 +110,20 @@
       <div class="divider-line"></div>
       <div class="sub-row">当月盈亏 <span id="tiger-monthly">—</span></div>
       <div class="sub-row">历史总盈亏 <span id="tiger-alltime">—</span></div>
+      <div class="sub-row">XIRR <span id="tiger-xirr">—</span></div>
     </div>
+  </div>
+
+  <!-- 回报率说明 -->
+  <div class="table-box" style="margin-bottom:24px;">
+    <div class="sub-row" style="color:#8aabcc;">美股合并累计 ROI <span id="us-roi" style="font-weight:700;">—</span></div>
+    <details style="margin-top:10px;">
+      <summary style="cursor:pointer; color:#6b8aad; font-size:0.8rem;">ⓘ XIRR 和 ROI 是什么？</summary>
+      <div style="font-size:0.82rem; color:#8aabcc; margin-top:8px; line-height:1.6;">
+        <p><b>XIRR（真实年化回报率）</b>：考虑每一笔钱「几号进、几号出」，算出平均<b>每年</b>赚百分之几。例：13.8%/年 = 平均每年滚 13.8%，能跟定存、基金公平比较。</p>
+        <p style="margin-top:6px;"><b>ROI（累计回报率）</b>：从开始到现在<b>总共</b>赚了百分之几（相对投入本金）。直观看总成绩，但不分时间长短——所以配合 XIRR 一起看：ROI 看总量、XIRR 看每年速度。</p>
+      </div>
+    </details>
   </div>
 
   <!-- Charts -->
