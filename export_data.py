@@ -63,8 +63,13 @@ def read_mplus(wb):
     ws = wb["马股投资账户"]
     rows = list(ws.iter_rows(values_only=True))
 
-    # Summary section starts at index 57 (Excel row 58 = 孚展市值)
-    summary_start = 57
+    # Find summary section by label (robust against new rows being inserted above)
+    summary_start = next(
+        (i for i, r in enumerate(rows) if r[0] and "孚展市值" in str(r[0])),
+        None
+    )
+    if summary_start is None:
+        raise ValueError("找不到孚展市值行，请检查 Excel 马股投资账户工作表结构")
 
     margin_value = parse_num(rows[summary_start][1])
     cash_total   = parse_num(rows[summary_start + 1][1])
@@ -77,7 +82,7 @@ def read_mplus(wb):
 
     # Historical snapshots: rows where both 股票(E, index 4) and 现金(F, index 5) are non-None
     snapshots = []
-    for row in rows[3:56]:
+    for row in rows[3:summary_start]:
         dt = row[1]
         stock = parse_num(row[4])
         cash  = parse_num(row[5])
@@ -108,7 +113,8 @@ def fetch_exchange_rate():
         r.raise_for_status()
         rate = r.json()["rates"]["MYR"]
         return {"usd_to_myr": round(rate, 4), "fetched_at": str(date.today())}
-    except Exception:
+    except Exception as e:
+        print(f"[fetch_exchange_rate] 汇率获取失败: {e}")
         return {"usd_to_myr": None, "fetched_at": str(date.today())}
 
 if __name__ == "__main__":
