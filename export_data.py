@@ -122,7 +122,22 @@ if __name__ == "__main__":
     us, monthly, yearly, totals = read_us_stocks(wb)
     mplus, snapshots = read_mplus(wb)
     fx = fetch_exchange_rate()
-    print("M+:", mplus)
-    print("M+ 历史快照数量:", len(snapshots))
-    print("快照列表:", snapshots)
-    print("汇率:", fx)
+
+    output = {
+        "updated": str(date.today()),
+        "exchange_rate": fx,
+        "us_stocks": us,
+        "mplus": mplus,
+        "monthly_usd": monthly,
+        "yearly_summary_usd": yearly,
+        "totals_usd": totals,
+        "mplus_snapshots": snapshots,
+    }
+
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+
+    print(f"✅ data.json 已写入: {OUTPUT_PATH}")
+    print(f"   美股总资产: USD {us['total_usd']:,.2f}")
+    print(f"   M+ 总资产: MYR {mplus['total_myr']:,.2f}")
+    print(f"   汇率: 1 USD = MYR {fx['usd_to_myr']}")
