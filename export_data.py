@@ -63,45 +63,43 @@ def read_mplus(wb):
     ws = wb["马股投资账户"]
     rows = list(ws.iter_rows(values_only=True))
 
-    # Find summary section by label (robust against new rows being inserted above)
-    summary_start = next(
-        (i for i, r in enumerate(rows) if r[0] and "孚展市值" in str(r[0])),
-        None
-    )
-    if summary_start is None:
-        raise ValueError("找不到孚展市值行，请检查 Excel 马股投资账户工作表结构")
-
-    margin_value = parse_num(rows[summary_start][1])
-    cash_total   = parse_num(rows[summary_start + 1][1])
-    holding_pnl  = parse_num(rows[summary_start + 2][1])
-    div_cash     = parse_num(rows[summary_start + 3][1])
-    div_margin   = parse_num(rows[summary_start + 4][1])
-    snap_date    = str(rows[summary_start + 5][1])[:10] if rows[summary_start + 5][1] else ""
-
-    total_myr = round((margin_value or 0) + (cash_total or 0), 2)
-
-    # Historical snapshots: rows where both 股票(E, index 4) and 现金(F, index 5) are non-None
+    # Read from historical data rows (snapshot block removed)
+    year_last = {}   # year -> {"j": ..., "k": ...}
     snapshots = []
-    for row in rows[3:summary_start]:
-        dt = row[1]
-        stock = parse_num(row[4])
-        cash  = parse_num(row[5])
-        if dt and stock is not None and cash is not None:
-            snap_total = round(stock + cash, 2)
-            snapshots.append({
-                "date": str(dt)[:10],
-                "total_myr": snap_total
-            })
+    latest = {"date": "", "total_myr": None}
 
-    # Add current snapshot if not duplicate
-    if snap_date and (not snapshots or snapshots[-1]["date"] != snap_date):
-        snapshots.append({"date": snap_date, "total_myr": total_myr})
+    for row in rows[3:]:
+        dt = row[1]
+        if not dt or not hasattr(dt, "year"):
+            continue
+        g = parse_num(row[6])   # G = 总值
+        e = parse_num(row[4])   # E = 股票
+        f = parse_num(row[5])   # F = 现金
+        d = parse_num(row[3])   # D = Margin
+        j = parse_num(row[9])   # J = 当年现金股息
+        k = parse_num(row[10])  # K = 当年Margin股息
+
+        # Calculate G if formula cache missing
+        if g is None and e is not None and f is not None and d is not None:
+            g = round(e + f - d, 2)
+
+        if j is not None:
+            year_last[dt.year] = {"j": j, "k": k or 0}
+
+        if g is not None:
+            snap_date = str(dt)[:10]
+            snapshots.append({"date": snap_date, "total_myr": g})
+            latest = {"date": snap_date, "total_myr": g}
+
+    # Cumulative dividends = sum of last J/K per year
+    div_cash   = round(sum(v["j"] for v in year_last.values()), 2)
+    div_margin = round(sum(v["k"] for v in year_last.values()), 2)
+    total_myr  = latest["total_myr"]
+    snap_date  = latest["date"]
 
     return {
-        "margin_market_value_myr": margin_value,
-        "cash_total_myr": cash_total,
         "total_myr": total_myr,
-        "holding_pnl_myr": holding_pnl,
+        "holding_pnl_myr": None,
         "dividends_cash_myr": div_cash,
         "dividends_margin_myr": div_margin,
         "snapshot_date": snap_date,

@@ -42,9 +42,11 @@ async function loadDashboard() {
     : "汇率：无法获取";
   setText("fx-note", fxText);
 
-  // Total assets
-  setText("total-usd", `$${fmt(d.us_stocks.total_usd)}`);
-  setText("total-myr", `RM ${fmt(d.mplus.total_myr)}`);
+  // Total assets — combined MYR (US stocks converted + M+)
+  const usdInMyr = fx.usd_to_myr ? d.us_stocks.total_usd * fx.usd_to_myr : 0;
+  const combinedMyr = usdInMyr + (d.mplus.total_myr || 0);
+  setText("total-combined-myr", `RM ${fmt(combinedMyr)}`);
+  setText("total-usd-note", `（美股 $${fmt(d.us_stocks.total_usd)} × ${fmt(fx.usd_to_myr, 4)} + 马股 RM ${fmt(d.mplus.total_myr)}）`);
 
   // M+ card
   setText("mplus-total", `RM ${fmt(d.mplus.total_myr)}`);
