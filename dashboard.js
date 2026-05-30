@@ -22,8 +22,15 @@ function setText(id, text, cls = "") {
 }
 
 async function loadDashboard() {
-  const res = await fetch("data.json");
-  const d = await res.json();
+  let d;
+  try {
+    const res = await fetch("data.json");
+    d = await res.json();
+  } catch (e) {
+    document.getElementById("updated-date").textContent = "⚠️ 数据加载失败，请检查 data.json";
+    console.error("loadDashboard error:", e);
+    return;
+  }
 
   // Header
   setText("updated-date", `更新：${d.updated}`);
