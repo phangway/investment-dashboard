@@ -48,6 +48,18 @@ async function loadDashboard() {
   setText("total-combined-myr", `RM ${fmt(combinedMyr)}`);
   setText("total-usd-note", `（美股 $${fmt(d.us_stocks.total_usd)} × ${fmt(fx.usd_to_myr, 4)} + 马股 RM ${fmt(d.mplus.total_myr)}）`);
 
+  // Historical cumulative P&L in MYR
+  const usPnlUsd = (d.totals_usd.moomoo_all_time || 0) + (d.totals_usd.tiger_all_time || 0);
+  const usPnlMyr = fx.usd_to_myr ? usPnlUsd * fx.usd_to_myr : null;
+  const mplusPnl = d.mplus.all_time_pnl_myr || 0;
+  if (usPnlMyr !== null) {
+    const totalPnl = usPnlMyr + mplusPnl;
+    const el = document.getElementById("total-alltime-pnl");
+    el.textContent = `${totalPnl >= 0 ? "▲ +" : "▼ "}RM ${fmt(Math.abs(totalPnl))}`;
+    el.className = totalPnl >= 0 ? "up" : "down";
+    setText("total-alltime-note", `（美股 $${fmt(usPnlUsd)} × ${fmt(fx.usd_to_myr, 4)} + 马股 RM ${fmt(mplusPnl)}）`);
+  }
+
   // M+ card
   setText("mplus-total", `RM ${fmt(d.mplus.total_myr)}`);
   setText("mplus-equity", d.mplus.equity_myr != null ? `RM ${fmt(d.mplus.equity_myr)}` : "—");
