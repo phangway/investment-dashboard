@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; }
     body { background: #0f1923; color: #e0e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; padding: 24px 16px; }
 
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -14,12 +15,12 @@
     .updated { font-size: 0.8rem; color: #6b8aad; }
 
     /* Total Assets Banner */
-    .total-banner { background: linear-gradient(135deg, #1a2d4a, #1a2634); border: 1px solid #2a3f5a; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+    .total-banner { background: linear-gradient(135deg, #1a2d4a, #1a2634); border: 1px solid #2a3f5a; border-radius: 16px; padding: 28px 28px; margin-bottom: 20px; text-align: center; }
     .total-banner .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b8aad; margin-bottom: 10px; }
-    .total-banner .amounts { display: flex; gap: 32px; flex-wrap: wrap; align-items: baseline; }
+    .total-banner .amounts { display: flex; gap: 32px; flex-wrap: wrap; align-items: baseline; justify-content: center; }
     .total-banner .amount-group { display: flex; flex-direction: column; }
     .total-banner .currency { font-size: 0.8rem; color: #6b8aad; margin-bottom: 2px; }
-    .total-banner .big-num { font-size: 2rem; font-weight: 700; color: #e8f4fd; letter-spacing: -0.01em; }
+    .total-banner .big-num { font-size: 2.6rem; font-weight: 700; color: #e8f4fd; letter-spacing: -0.01em; }
     .total-banner .fx-note { margin-top: 10px; font-size: 0.75rem; color: #4a6a8a; }
 
     /* Platform Cards */
