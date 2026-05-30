@@ -1,8 +1,8 @@
 {
-  "updated": "2026-05-30",
+  "updated": "2026-05-31",
   "exchange_rate": {
     "usd_to_myr": 3.965,
-    "fetched_at": "2026-05-30"
+    "fetched_at": "2026-05-31"
   },
   "us_stocks": {
     "tiger_total_usd": 15839.56,
@@ -647,5 +647,33 @@
       "date": "2026-05-30",
       "total_myr": 203416.61
     }
-  ]
+  ],
+  "returns": {
+    "as_of": "2026-05-31",
+    "usd_myr": 3.965,
+    "mplus_xirr_incl_dividends": true,
+    "xirr": {
+      "mplus": 0.1307,
+      "moomoo": 0.2335,
+      "tiger": -0.0012,
+      "total": 0.1004
+    },
+    "roi": {
+      "mplus": {
+        "value": 1.0835,
+        "net_profit": 151696.28,
+        "base": 140000
+      },
+      "us": {
+        "value": 0.3939,
+        "net_profit": 52557.4,
+        "base": 133418
+      },
+      "total": {
+        "value": 0.747,
+        "net_profit": 204253.68,
+        "base": 273418
+      }
+    }
+  }
 }

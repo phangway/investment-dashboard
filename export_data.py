@@ -2,6 +2,7 @@ import openpyxl
 import requests
 import json
 from datetime import date
+import returns as returns_mod
 
 EXCEL_PATH = "/mnt/c/Users/MULIA-PC/Desktop/股票/投资记录.xlsx"
 OUTPUT_PATH = "/mnt/c/Users/MULIA-PC/Desktop/investment-dashboard/data.json"
@@ -135,6 +136,15 @@ if __name__ == "__main__":
     mplus, snapshots = read_mplus(wb)
     fx = fetch_exchange_rate()
 
+    rate = fx["usd_to_myr"] or 0
+    rets = returns_mod.build_returns(
+        wb, rate,
+        mplus_total_myr=mplus["total_myr"],
+        moomoo_usd=us["moomoo_total_usd"],
+        tiger_usd=us["tiger_total_usd"],
+        mplus_net_profit=mplus["all_time_pnl_myr"],
+    )
+
     output = {
         "updated": str(date.today()),
         "exchange_rate": fx,
@@ -144,6 +154,7 @@ if __name__ == "__main__":
         "yearly_summary_usd": yearly,
         "totals_usd": totals,
         "mplus_snapshots": snapshots,
+        "returns": rets,
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
@@ -153,3 +164,4 @@ if __name__ == "__main__":
     print(f"   美股总资产: USD {us['total_usd']:,.2f}")
     print(f"   M+ 总资产: MYR {mplus['total_myr']:,.2f}")
     print(f"   汇率: 1 USD = MYR {fx['usd_to_myr']}")
+    print(f"   XIRR: 马股 {rets['xirr']['mplus']} | MooMoo {rets['xirr']['moomoo']} | Tiger {rets['xirr']['tiger']} | 总 {rets['xirr']['total']}")
