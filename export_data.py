@@ -97,16 +97,18 @@ def read_mplus(wb):
         if g is not None:
             snap_date = str(dt)[:10]
             snapshots.append({"date": snap_date, "total_myr": g})
-            latest = {"date": snap_date, "total_myr": g}
+            latest = {"date": snap_date, "total_myr": g, "equity_myr": e, "cash_myr": f}
 
     # Cumulative dividends = sum of last J/K per year
     div_cash   = round(sum(v["j"] for v in year_last.values()), 2)
     div_margin = round(sum(v["k"] for v in year_last.values()), 2)
     total_myr  = latest["total_myr"]
-    snap_date  = latest["date"]
+    snap_date  = latest.get("date", "")
 
     return {
         "total_myr": total_myr,
+        "equity_myr": latest.get("equity_myr"),
+        "cash_myr": latest.get("cash_myr"),
         "holding_pnl_myr": None,
         "dividends_cash_myr": div_cash,
         "dividends_margin_myr": div_margin,
