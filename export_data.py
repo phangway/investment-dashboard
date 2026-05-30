@@ -19,9 +19,13 @@ def read_us_stocks(wb):
     rows = list(ws.iter_rows(values_only=True))
 
     # Current totals: row 4 = index 3, row 5 = index 4, row 6 = index 5
-    tiger_total = parse_num(rows[3][1])   # B4
-    moomoo_total = parse_num(rows[4][1])  # B5
-    combined = parse_num(rows[5][1])      # B6
+    tiger_total  = parse_num(rows[3][1])   # B4
+    tiger_equity = parse_num(rows[3][2])   # C4 市值
+    tiger_cash   = parse_num(rows[3][3])   # D4 现金
+    moomoo_total  = parse_num(rows[4][1])  # B5
+    moomoo_equity = parse_num(rows[4][2])  # C5 市值
+    moomoo_cash   = parse_num(rows[4][3])  # D5 现金
+    combined = parse_num(rows[5][1])       # B6
 
     # Monthly data: row 8 is header (index 7), data starts row 9 (index 8)
     monthly = []
@@ -55,7 +59,11 @@ def read_us_stocks(wb):
 
     return {
         "tiger_total_usd": tiger_total,
+        "tiger_equity_usd": tiger_equity,
+        "tiger_cash_usd": tiger_cash,
         "moomoo_total_usd": moomoo_total,
+        "moomoo_equity_usd": moomoo_equity,
+        "moomoo_cash_usd": moomoo_cash,
         "total_usd": combined,
     }, monthly, yearly, totals
 

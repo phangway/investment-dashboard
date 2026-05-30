@@ -60,11 +60,15 @@ async function loadDashboard() {
   const latestMonth = d.monthly_usd[d.monthly_usd.length - 1];
   setText("moomoo-monthly", pnlText(latestMonth?.moomoo, "$"), colorClass(latestMonth?.moomoo));
   setText("moomoo-alltime", pnlText(d.totals_usd.moomoo_all_time, "$"), colorClass(d.totals_usd.moomoo_all_time));
+  setText("moomoo-equity", d.us_stocks.moomoo_equity_usd != null ? `$${fmt(d.us_stocks.moomoo_equity_usd)}` : "—");
+  setText("moomoo-cash",   d.us_stocks.moomoo_cash_usd   != null ? `$${fmt(d.us_stocks.moomoo_cash_usd)}`   : "—");
 
   // Tiger card
   setText("tiger-total", `$${fmt(d.us_stocks.tiger_total_usd)}`);
   setText("tiger-monthly", pnlText(latestMonth?.tiger, "$"), colorClass(latestMonth?.tiger));
   setText("tiger-alltime", pnlText(d.totals_usd.tiger_all_time, "$"), colorClass(d.totals_usd.tiger_all_time));
+  setText("tiger-equity", d.us_stocks.tiger_equity_usd != null ? `$${fmt(d.us_stocks.tiger_equity_usd)}` : "—");
+  setText("tiger-cash",   d.us_stocks.tiger_cash_usd   != null ? `$${fmt(d.us_stocks.tiger_cash_usd)}`   : "—");
 
   // USD Chart — last 24 months with data
   const recentMonths = d.monthly_usd.slice(-24).filter(m => m.tiger !== null || m.moomoo !== null);
