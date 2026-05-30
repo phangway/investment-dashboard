@@ -3,6 +3,12 @@ function fmt(num, decimals = 2) {
   return num.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
+function pct(num) {
+  if (num === null || num === undefined) return "—";
+  const sign = num >= 0 ? "+" : "";
+  return `${sign}${(num * 100).toFixed(1)}%`;
+}
+
 function colorClass(num) {
   if (num === null || num === undefined) return "";
   return num >= 0 ? "up" : "down";
@@ -82,6 +88,18 @@ async function loadDashboard() {
   setText("tiger-alltime", pnlText(d.totals_usd.tiger_all_time, "$"), colorClass(d.totals_usd.tiger_all_time));
   setText("tiger-equity", d.us_stocks.tiger_equity_usd != null ? `$${fmt(d.us_stocks.tiger_equity_usd)}` : "—");
   setText("tiger-cash",   d.us_stocks.tiger_cash_usd   != null ? `$${fmt(d.us_stocks.tiger_cash_usd)}`   : "—");
+
+  // 回报率 XIRR + ROI
+  const r = d.returns;
+  if (r) {
+    setText("total-xirr", `${pct(r.xirr.total)}/年`, colorClass(r.xirr.total));
+    setText("total-roi",  pct(r.roi.total.value),    colorClass(r.roi.total.value));
+    setText("mplus-xirr", `${pct(r.xirr.mplus)}/年`, colorClass(r.xirr.mplus));
+    setText("mplus-roi",  pct(r.roi.mplus.value),    colorClass(r.roi.mplus.value));
+    setText("moomoo-xirr",`${pct(r.xirr.moomoo)}/年`,colorClass(r.xirr.moomoo));
+    setText("tiger-xirr", `${pct(r.xirr.tiger)}/年`, colorClass(r.xirr.tiger));
+    setText("us-roi",     pct(r.roi.us.value),       colorClass(r.roi.us.value));
+  }
 
   // USD Chart — last 24 months with data
   const recentMonths = d.monthly_usd.slice(-24).filter(m => m.tiger !== null || m.moomoo !== null);
