@@ -1,11 +1,13 @@
 import openpyxl
 import requests
 import json
+import os
 from datetime import date
 import returns as returns_mod
 
 EXCEL_PATH = "/mnt/c/Users/MULIA-PC/Desktop/股票/投资记录.xlsx"
-OUTPUT_PATH = "/mnt/c/Users/MULIA-PC/Desktop/investment-dashboard/data.json"
+# data.json 写到本脚本所在的文件夹（脚本搬到哪都不会坏）
+OUTPUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data.json")
 
 def parse_num(val):
     if val is None or val == "—" or str(val).strip() == "—":
