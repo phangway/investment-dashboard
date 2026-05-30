@@ -51,7 +51,7 @@ async function loadDashboard() {
   // M+ card
   setText("mplus-total", `RM ${fmt(d.mplus.total_myr)}`);
   setText("mplus-equity", d.mplus.equity_myr != null ? `RM ${fmt(d.mplus.equity_myr)}` : "—");
-  setText("mplus-cash",   d.mplus.cash_myr   != null ? `RM ${fmt(d.mplus.cash_myr)}`   : "—");
+  setText("mplus-cash",   d.mplus.cash_myr   != null ? `RM ${fmt(d.mplus.cash_myr)} （含 Margin 100k）` : "—");
   setText("mplus-div-cash", `RM ${fmt(d.mplus.dividends_cash_myr)}`);
   setText("mplus-div-margin", `RM ${fmt(d.mplus.dividends_margin_myr)}`);
 
