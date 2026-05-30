@@ -59,11 +59,64 @@ def read_us_stocks(wb):
         "total_usd": combined,
     }, monthly, yearly, totals
 
+def read_mplus(wb):
+    ws = wb["马股投资账户"]
+    rows = list(ws.iter_rows(values_only=True))
+
+    # Summary section starts at index 57 (Excel row 58 = 孚展市值)
+    summary_start = 57
+
+    margin_value = parse_num(rows[summary_start][1])
+    cash_total   = parse_num(rows[summary_start + 1][1])
+    holding_pnl  = parse_num(rows[summary_start + 2][1])
+    div_cash     = parse_num(rows[summary_start + 3][1])
+    div_margin   = parse_num(rows[summary_start + 4][1])
+    snap_date    = str(rows[summary_start + 5][1])[:10] if rows[summary_start + 5][1] else ""
+
+    total_myr = round((margin_value or 0) + (cash_total or 0), 2)
+
+    # Historical snapshots: rows where both 股票(E, index 4) and 现金(F, index 5) are non-None
+    snapshots = []
+    for row in rows[3:56]:
+        dt = row[1]
+        stock = parse_num(row[4])
+        cash  = parse_num(row[5])
+        if dt and stock is not None and cash is not None:
+            snap_total = round(stock + cash, 2)
+            snapshots.append({
+                "date": str(dt)[:10],
+                "total_myr": snap_total
+            })
+
+    # Add current snapshot if not duplicate
+    if snap_date and (not snapshots or snapshots[-1]["date"] != snap_date):
+        snapshots.append({"date": snap_date, "total_myr": total_myr})
+
+    return {
+        "margin_market_value_myr": margin_value,
+        "cash_total_myr": cash_total,
+        "total_myr": total_myr,
+        "holding_pnl_myr": holding_pnl,
+        "dividends_cash_myr": div_cash,
+        "dividends_margin_myr": div_margin,
+        "snapshot_date": snap_date,
+    }, snapshots
+
+def fetch_exchange_rate():
+    try:
+        r = requests.get("https://api.frankfurter.app/latest?from=USD&to=MYR", timeout=5)
+        r.raise_for_status()
+        rate = r.json()["rates"]["MYR"]
+        return {"usd_to_myr": round(rate, 4), "fetched_at": str(date.today())}
+    except Exception:
+        return {"usd_to_myr": None, "fetched_at": str(date.today())}
+
 if __name__ == "__main__":
     wb = openpyxl.load_workbook(EXCEL_PATH, data_only=True)
     us, monthly, yearly, totals = read_us_stocks(wb)
-    print("美股总资产:", us)
-    print("月度数据条数:", len(monthly))
-    print("最新3条:", monthly[-3:])
-    print("年度数据:", yearly[-2:])
-    print("历史总盈亏:", totals)
+    mplus, snapshots = read_mplus(wb)
+    fx = fetch_exchange_rate()
+    print("M+:", mplus)
+    print("M+ 历史快照数量:", len(snapshots))
+    print("快照列表:", snapshots)
+    print("汇率:", fx)
