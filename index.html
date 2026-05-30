@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的投资 Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f1923; color: #e0e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; padding: 24px 16px; }
+
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: 0.02em; }
+    .updated { font-size: 0.8rem; color: #6b8aad; }
+
+    /* Total Assets Banner */
+    .total-banner { background: linear-gradient(135deg, #1a2d4a, #1a2634); border: 1px solid #2a3f5a; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+    .total-banner .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b8aad; margin-bottom: 10px; }
+    .total-banner .amounts { display: flex; gap: 32px; flex-wrap: wrap; align-items: baseline; }
+    .total-banner .amount-group { display: flex; flex-direction: column; }
+    .total-banner .currency { font-size: 0.8rem; color: #6b8aad; margin-bottom: 2px; }
+    .total-banner .big-num { font-size: 2rem; font-weight: 700; color: #e8f4fd; letter-spacing: -0.01em; }
+    .total-banner .fx-note { margin-top: 10px; font-size: 0.75rem; color: #4a6a8a; }
+
+    /* Platform Cards */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+
+    .card { background: #1a2634; border: 1px solid #243447; border-radius: 14px; padding: 20px; }
+    .card .platform { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b8aad; margin-bottom: 8px; }
+    .card .total { font-size: 1.5rem; font-weight: 700; color: #e8f4fd; margin-bottom: 4px; }
+    .card .sub-row { font-size: 0.82rem; color: #8aabcc; margin-top: 6px; }
+    .card .sub-row span { font-weight: 600; }
+    .up   { color: #00d4aa !important; }
+    .down { color: #ff4d6d !important; }
+    .divider-line { border-top: 1px solid #243447; margin: 12px 0; }
+
+    /* Charts */
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .charts { grid-template-columns: 1fr; } }
+    .chart-box { background: #1a2634; border: 1px solid #243447; border-radius: 14px; padding: 20px; }
+    .chart-box h3 { font-size: 0.85rem; color: #8aabcc; margin-bottom: 16px; font-weight: 500; }
+
+    /* Table */
+    .table-box { background: #1a2634; border: 1px solid #243447; border-radius: 14px; padding: 20px; overflow-x: auto; }
+    .table-box h3 { font-size: 0.85rem; color: #8aabcc; margin-bottom: 16px; font-weight: 500; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { color: #6b8aad; font-weight: 500; text-align: right; padding: 6px 10px; border-bottom: 1px solid #243447; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    th:first-child { text-align: left; }
+    td { text-align: right; padding: 8px 10px; border-bottom: 1px solid #1a2634; }
+    td:first-child { text-align: left; color: #8aabcc; }
+    tr:hover td { background: #1f2f42; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📊 我的投资 Dashboard</h1>
+    <div class="updated" id="updated-date">载入中…</div>
+  </header>
+
+  <!-- Total Assets Banner -->
+  <div class="total-banner">
+    <div class="label">总资产</div>
+    <div class="amounts">
+      <div class="amount-group">
+        <div class="currency">USD</div>
+        <div class="big-num" id="total-usd">—</div>
+      </div>
+      <div class="amount-group">
+        <div class="currency">MYR</div>
+        <div class="big-num" id="total-myr">—</div>
+      </div>
+    </div>
+    <div class="fx-note" id="fx-note">汇率载入中…</div>
+  </div>
+
+  <!-- Platform Cards: M+, MooMoo, Tiger -->
+  <div class="cards">
+    <!-- M+ Card -->
+    <div class="card">
+      <div class="platform">M+ 马股</div>
+      <div class="total" id="mplus-total">—</div>
+      <div class="sub-row">持仓盈亏 <span id="mplus-pnl">—</span></div>
+      <div class="divider-line"></div>
+      <div class="sub-row">已提取股息（现金账户）<span id="mplus-div-cash">—</span></div>
+      <div class="sub-row">Margin 股息（留在账户）<span id="mplus-div-margin">—</span></div>
+    </div>
+    <!-- MooMoo Card -->
+    <div class="card">
+      <div class="platform">MooMoo</div>
+      <div class="total" id="moomoo-total">—</div>
+      <div class="sub-row">当月盈亏 <span id="moomoo-monthly">—</span></div>
+      <div class="sub-row">历史总盈亏 <span id="moomoo-alltime">—</span></div>
+    </div>
+    <!-- Tiger Card -->
+    <div class="card">
+      <div class="platform">Tiger Broker</div>
+      <div class="total" id="tiger-total">—</div>
+      <div class="sub-row">当月盈亏 <span id="tiger-monthly">—</span></div>
+      <div class="sub-row">历史总盈亏 <span id="tiger-alltime">—</span></div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts">
+    <div class="chart-box">
+      <h3>美股月度盈亏（USD）</h3>
+      <canvas id="chart-usd"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>M+ 资产走势（MYR）</h3>
+      <canvas id="chart-myr"></canvas>
+    </div>
+  </div>
+
+  <!-- Monthly Table -->
+  <div class="table-box">
+    <h3>月度记录（最近 24 个月）</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>月份</th>
+          <th>MooMoo (USD)</th>
+          <th>Tiger (USD)</th>
+          <th>美股合计 (USD)</th>
+        </tr>
+      </thead>
+      <tbody id="monthly-table-body"></tbody>
+    </table>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
