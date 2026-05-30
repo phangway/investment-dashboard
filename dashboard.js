@@ -28,9 +28,19 @@ function setText(id, text, cls = "") {
 }
 
 async function loadDashboard() {
+  const isDemo = new URLSearchParams(window.location.search).get("demo") === "true";
+  const dataFile = isDemo ? "data_demo.json" : "data.json";
+
+  if (isDemo) {
+    const banner = document.createElement("div");
+    banner.style.cssText = "background:#b06aff22;border:1px solid #b06aff55;color:#b06aff;text-align:center;padding:8px 16px;font-size:13px;letter-spacing:0.05em;";
+    banner.textContent = "🎭 演示模式 — 所有数据均为虚构，仅供展示";
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
   let d;
   try {
-    const res = await fetch("data.json");
+    const res = await fetch(dataFile);
     d = await res.json();
   } catch (e) {
     document.getElementById("updated-date").textContent = "⚠️ 数据加载失败，请检查 data.json";
