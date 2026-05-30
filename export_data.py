@@ -3,8 +3,8 @@ import requests
 import json
 from datetime import date
 
-EXCEL_PATH = r"C:\Users\MULIA-PC\Desktop\股票\投资记录.xlsx"
-OUTPUT_PATH = r"C:\Users\MULIA-PC\Desktop\investment-dashboard\data.json"
+EXCEL_PATH = "/mnt/c/Users/MULIA-PC/Desktop/股票/投资记录.xlsx"
+OUTPUT_PATH = "/mnt/c/Users/MULIA-PC/Desktop/investment-dashboard/data.json"
 
 def parse_num(val):
     if val is None or val == "—" or str(val).strip() == "—":
