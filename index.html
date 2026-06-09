@@ -32,6 +32,7 @@
     .card .total { font-size: 1.5rem; font-weight: 700; color: #e8f4fd; margin-bottom: 4px; }
     .card .sub-row { font-size: 0.82rem; color: #8aabcc; margin-top: 6px; }
     .card .sub-row span { font-weight: 600; }
+    .card .sub-row .pct { font-size: 0.75rem; color: #4a6a8a; font-weight: 400; margin-left: 6px; }
     .up   { color: #00d4aa !important; }
     .down { color: #ff4d6d !important; }
     .divider-line { border-top: 1px solid #243447; margin: 12px 0; }
@@ -81,8 +82,8 @@
     <div class="card">
       <div class="platform">M+ 马股</div>
       <div class="total" id="mplus-total">—</div>
-      <div class="sub-row">市值 <span id="mplus-equity">—</span></div>
-      <div class="sub-row">现金 <span id="mplus-cash">—</span></div>
+      <div class="sub-row">市值 <span id="mplus-equity">—</span><span class="pct" id="mplus-equity-pct"></span></div>
+      <div class="sub-row">现金 <span id="mplus-cash">—</span><span class="pct" id="mplus-cash-pct"></span></div>
       <div class="divider-line"></div>
       <div class="sub-row">累计盈亏 <span id="mplus-alltime">—</span></div>
       <div class="sub-row">已提取股息（现金账户）<span id="mplus-div-cash">—</span></div>
@@ -95,8 +96,8 @@
     <div class="card">
       <div class="platform">MooMoo</div>
       <div class="total" id="moomoo-total">—</div>
-      <div class="sub-row">市值 <span id="moomoo-equity">—</span></div>
-      <div class="sub-row">现金 <span id="moomoo-cash">—</span></div>
+      <div class="sub-row">市值 <span id="moomoo-equity">—</span><span class="pct" id="moomoo-equity-pct"></span></div>
+      <div class="sub-row">现金 <span id="moomoo-cash">—</span><span class="pct" id="moomoo-cash-pct"></span></div>
       <div class="divider-line"></div>
       <div class="sub-row">当月盈亏 <span id="moomoo-monthly">—</span></div>
       <div class="sub-row">历史总盈亏 <span id="moomoo-alltime">—</span></div>
@@ -106,8 +107,8 @@
     <div class="card">
       <div class="platform">Tiger Broker</div>
       <div class="total" id="tiger-total">—</div>
-      <div class="sub-row">市值 <span id="tiger-equity">—</span></div>
-      <div class="sub-row">现金 <span id="tiger-cash">—</span></div>
+      <div class="sub-row">市值 <span id="tiger-equity">—</span><span class="pct" id="tiger-equity-pct"></span></div>
+      <div class="sub-row">现金 <span id="tiger-cash">—</span><span class="pct" id="tiger-cash-pct"></span></div>
       <div class="divider-line"></div>
       <div class="sub-row">当月盈亏 <span id="tiger-monthly">—</span></div>
       <div class="sub-row">历史总盈亏 <span id="tiger-alltime">—</span></div>

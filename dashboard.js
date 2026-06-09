@@ -80,6 +80,10 @@ async function loadDashboard() {
   setText("mplus-total", `RM ${fmt(d.mplus.total_myr)}`);
   setText("mplus-equity", d.mplus.equity_myr != null ? `RM ${fmt(d.mplus.equity_myr)}` : "—");
   setText("mplus-cash",   d.mplus.cash_myr   != null ? `RM ${fmt(d.mplus.cash_myr)} （含 Margin 100k）` : "—");
+  if (d.mplus.total_myr) {
+    setText("mplus-equity-pct", d.mplus.equity_myr != null ? `(${(d.mplus.equity_myr / d.mplus.total_myr * 100).toFixed(1)}%)` : "");
+    setText("mplus-cash-pct",   d.mplus.cash_myr   != null ? `(${(d.mplus.cash_myr   / d.mplus.total_myr * 100).toFixed(1)}%)` : "");
+  }
   setText("mplus-alltime", pnlText(d.mplus.all_time_pnl_myr, "RM "), colorClass(d.mplus.all_time_pnl_myr));
   setText("mplus-div-cash", `RM ${fmt(d.mplus.dividends_cash_myr)}`);
   setText("mplus-div-margin", `RM ${fmt(d.mplus.dividends_margin_myr)}`);
@@ -91,6 +95,10 @@ async function loadDashboard() {
   setText("moomoo-alltime", pnlText(d.totals_usd.moomoo_all_time, "$"), colorClass(d.totals_usd.moomoo_all_time));
   setText("moomoo-equity", d.us_stocks.moomoo_equity_usd != null ? `$${fmt(d.us_stocks.moomoo_equity_usd)}` : "—");
   setText("moomoo-cash",   d.us_stocks.moomoo_cash_usd   != null ? `$${fmt(d.us_stocks.moomoo_cash_usd)}`   : "—");
+  if (d.us_stocks.moomoo_total_usd) {
+    setText("moomoo-equity-pct", d.us_stocks.moomoo_equity_usd != null ? `(${(d.us_stocks.moomoo_equity_usd / d.us_stocks.moomoo_total_usd * 100).toFixed(1)}%)` : "");
+    setText("moomoo-cash-pct",   d.us_stocks.moomoo_cash_usd   != null ? `(${(d.us_stocks.moomoo_cash_usd   / d.us_stocks.moomoo_total_usd * 100).toFixed(1)}%)` : "");
+  }
 
   // Tiger card
   setText("tiger-total", `$${fmt(d.us_stocks.tiger_total_usd)}`);
@@ -98,6 +106,10 @@ async function loadDashboard() {
   setText("tiger-alltime", pnlText(d.totals_usd.tiger_all_time, "$"), colorClass(d.totals_usd.tiger_all_time));
   setText("tiger-equity", d.us_stocks.tiger_equity_usd != null ? `$${fmt(d.us_stocks.tiger_equity_usd)}` : "—");
   setText("tiger-cash",   d.us_stocks.tiger_cash_usd   != null ? `$${fmt(d.us_stocks.tiger_cash_usd)}`   : "—");
+  if (d.us_stocks.tiger_total_usd) {
+    setText("tiger-equity-pct", d.us_stocks.tiger_equity_usd != null ? `(${(d.us_stocks.tiger_equity_usd / d.us_stocks.tiger_total_usd * 100).toFixed(1)}%)` : "");
+    setText("tiger-cash-pct",   d.us_stocks.tiger_cash_usd   != null ? `(${(d.us_stocks.tiger_cash_usd   / d.us_stocks.tiger_total_usd * 100).toFixed(1)}%)` : "");
+  }
 
   // 回报率 XIRR + ROI
   const r = d.returns;
